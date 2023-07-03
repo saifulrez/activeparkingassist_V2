@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/Lib/jquery-1.9.1.js"></script>
+    <script src="Scripts/Lib/angular.js"></script>
+    <script src="Scripts/Lib/bootstrap.js"></script>
+    <script src="Scripts/Lib/ui-bootstrap.js"></script>
+    <script src="Scripts/Lib/ui-bootstrap-tpls.js"></script>
+    <script src="Scripts/App/app.js"></script>
+    <script src="Scripts/App/states.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap-theme.css">
+</head>
+<body ng-app="apaApp" ng-controller="apaController as vm">
+    <div class="row">
+        <!--DEFAULT IMAGE   
+        <div class="col-md-6">
+            <img class="img-responsive" src="Content/sync-screen.jpg" style="width: 100%;" />
+        </div>
+        -->
+        <!--SYNC WITH BUTTONS-->
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-xs-5" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-warning">
+                        <div class="panel-body" style="background-color:black;color:white;">Phone</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 text-center" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="background-color:black;color:white;">3:00</div>
+                    </div>
+                </div>
+                <div class="col-xs-5 text-right" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-success">
+                        <div class="panel-body" style="background-color:black;color:white;">Navigation</div>
+                    </div>
+                </div>
+            </div>
+            <!--MAIN SCREEN-->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="background-color:grey;color:white;height:30vh;">
+                            <!-- IDLE -->
+                            <div class="btn btn-primary" ng-click="vm.startSearching()" ng-show="vm.state == vm.states.idle && vm.state.mph <= 5">Start Search (Parallel)</div>
+                            <div class="btn btn-primary" ng-click="vm.startSearching()" ng-show="vm.state == vm.states.idle && vm.state.mph <= 5">Start Search (Perpendicular)</div>
+
+                            <!-- SEARCHING -->
+                            <h2 class="text-center" ng-show="vm.state == vm.states.searching">Searching for Spot</h2>
+                            <div class="btn btn-primary" ng-click="vm.cancelSearch()" ng-show="vm.state == vm.states.searching">Cancel Search</div>
+
+                            <!-- FOUND -->
+                            <h2 class="text-center" ng-show="vm.state == vm.states.found">Found Spot</h2>
+                            <div class="btn btn-primary" ng-click="vm.startParking()" ng-show="vm.state == vm.states.found">Select Spot</div>
+                            <div class="btn btn-primary" ng-click="vm.continueSearch()" ng-show="vm.state == vm.states.found">Continue Search</div>
+                            <div class="btn btn-primary" ng-click="vm.cancelSearch()" ng-show="vm.state == vm.states.found">Cancel Search</div>
+
+                            <!-- PARKING -->
+                            <h2 class="text-center" ng-show="vm.state == vm.states.parking">CAMERA FEED</h2>
+                            <div class="btn btn-primary" ng-click="vm.cancelParking()" ng-show="vm.state == vm.states.parking">Cancel Parking</div>
+
+                            <!-- SUCCESS -->
+                            <h2 class="text-center" ng-show="vm.state == vm.states.success">Parking Successful</h2>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--BOTTOM MENU-->
+            <div class="row">
+                <div class="col-xs-5" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-warning">
+                        <div class="panel-body" style="background-color:black;color:white;">Entertainment</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 text-center" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="background-color:black;color:white;">Settings</div>
+                    </div>
+                </div>
+                <div class="col-xs-5 text-right" style="padding: 0 !important; margin: 0 !important;">
+                    <div class="panel panel-success">
+                        <div class="panel-body" style="background-color:black;color:white;">Climate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-sm-offset-4 col-sm-4 col-sm-offset-4"><h2 class="text-center">State:&nbsp;{{vm.state.name}}</h2></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-4 col-sm-4 col-sm-offset-4"><h4 class="text-center">MPH:&nbsp;{{vm.state.mph}}</h4></div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>User Input Allowed</th>
+                        <th>Functional</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Accelerator</td>
+                        <td>{{vm.state.accelerator.input}}</td>
+                        <td>{{vm.state.accelerator.functional}}</td>
+                        <td>{{vm.state.accelerator.active}}</td>
+                    </tr>
+                    <tr>
+                        <td>Brakes</td>
+                        <td>{{vm.state.brakes.input}}</td>
+                        <td>{{vm.state.brakes.functional}}</td>
+                        <td>{{vm.state.brakes.active}}</td>
+                    </tr>
+                    <tr>
+                        <td>Steering Wheel</td>
+                        <td>{{vm.state.steeringWheel.input}}</td>
+                        <td>{{vm.state.steeringWheel.functional}}</td>
+                        <td>{{vm.state.steeringWheel.active}}</td>
+                    </tr>
+                    <tr>
+                        <td>Ultrasonic Sensors</td>
+                        <td>{{vm.state.ultrasonic.input}}</td>
+                        <td>{{vm.state.ultrasonic.functional}}</td>
+                        <td>{{vm.state.ultrasonic.active}}</td>
+                    </tr>
+                    <tr>
+                        <td>Rear Camera</td>
+                        <td>{{vm.state.camera.input}}</td>
+                        <td>{{vm.state.camera.functional}}</td>
+                        <td>{{vm.state.camera.active}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8 col-md-offset-2 text-center" style="border: 1px solid black;">
+            <div class="alert alert-danger" ng-show="(vm.state == vm.states.idle && vm.state.mph > 5) || vm.state == vm.states.obstacle || vm.state == vm.states.collision || vm.state == vm.states.hardware">
+                <span class="glyphicon glyphicon-warning-sign"></span>
+                <h4 ng-show="vm.state == vm.states.idle && vm.state.mph > 5">Lower the vehicle speed by braking in order to use the system.</h4>
+                <h4 ng-show="vm.state == vm.states.obstacle">System detected an obstacle. Reset the scenario to continue using the prototype.</h4>
+                <h4 ng-show="vm.state == vm.states.collision">System detected a collision. Reset the scenario to continue using the prototype.</h4>
+                <h4 ng-show="vm.state == vm.states.hardware">System detected a hardware failure. Reset the scenario to continue using the prototype.</h4>
+            </div>
+            <div class="alert alert-info" ng-show="vm.state == vm.states.success">
+                <span class="glyphicon glyphicon-info-sign"></span> <h4>Vehicle in park. Reset the scenario to continue using the prototype.</h4>
+            </div>
+            <div class="alert alert-info">
+                <span class="glyphicon glyphicon-info-sign"></span> <h4>{{vm.state.description}}</h4>
+            </div>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 text-center" style="border: 1px solid black;">
+            <h1>Driver Interaction Buttons</h1>
+            <div class="btn-group-vertical">
+                <div class="btn btn-primary" ng-click="vm.engageBrakes()">Brake</div>
+                <div class="btn btn-primary" ng-click="vm.accelerate()">Accelerate</div>
+                <!--<div class="btn btn-primary" ng-click="vm.turnSteeringWheel()">Turn Steering Wheel</div>-->
+            </div>
+        </div>
+        <div class="col-sm-6 text-center" style="border: 1px solid black;">
+            <h1>Outside Interaction Buttons</h1>
+            <div class="btn-group-vertical">
+                <div class="btn btn-primary" ng-show="(vm.state == vm.states.searching || vm.state == vm.states.parking) && vm.state != vm.states.obstacle" ng-click="vm.obstacleEvent()">Obstacle</div>
+                <div class="btn btn-primary" ng-show="vm.state != vm.states.collision && vm.state != vm.states.failure && vm.state != vm.states.obstacle && vm.state != vm.states.success" ng-click="vm.collisionEvent()">Collision</div>
+                <div class="btn btn-primary" ng-show="vm.state != vm.states.collision && vm.state != vm.states.failure && vm.state != vm.states.obstacle && vm.state != vm.states.success" ng-click="vm.hardwareEvent()">Hardware Fault</div>
+                <!--<div class="btn btn-primary" ng-click="vm.securityEvent()">Security Fault</div>-->
+                <div class="btn btn-primary" ng-click="vm.reset()">Reset</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
